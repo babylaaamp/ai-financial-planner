@@ -1,0 +1,159 @@
+:root {
+  --cream: #FEFAE0;
+  --cream-card: #FFFDF4;
+  --sage: #C0C78C;
+  --olive: #A6B37D;
+  --olive-dark: #8B9868;
+  --tan: #B99470;
+  --tan-dark: #9C7A57;
+  --text: #3E3A2E;
+  --text-muted: #8A8468;
+  --border: #E5E0C4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+  background: var(--cream);
+  color: var(--text);
+}
+
+h2, h3 {
+  font-family: Georgia, "Iowan Old Style", serif;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  margin-top: 0;
+}
+
+.container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}
+
+.brand {
+  font-family: Georgia, serif;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  color: var(--olive-dark);
+  margin-bottom: 14px;
+}
+
+.card {
+  background: var(--cream-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 22px;
+  margin-bottom: 16px;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 14px;
+  background: var(--cream);
+  color: var(--text);
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--olive);
+}
+
+button {
+  width: 100%;
+  padding: 11px;
+  background: var(--olive);
+  color: #FFFDF4;
+  border: none;
+  border-radius: 4px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+button:hover {
+  background: var(--olive-dark);
+}
+
+button.secondary {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+button.secondary:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+.error {
+  color: var(--tan-dark);
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.success-text {
+  color: var(--olive-dark);
+  font-size: 14px;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+}
+
+nav a {
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+nav a:hover {
+  background: var(--sage);
+  color: var(--text);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.row a {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-left: 8px;
+}
+
+.income { color: var(--olive-dark); font-weight: 500; }
+.expense { color: var(--tan-dark); font-weight: 500; }
+
+.progress-track {
+  background: var(--border);
+  border-radius: 6px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  background: var(--olive);
+  height: 8px;
+}
