@@ -31,7 +31,7 @@ class UserOut(BaseModel):
 class TransactionCreate(BaseModel):
     amount: float
     category: str
-    type: Literal["income", "expense"]
+    type: str
     date: date
     note: Optional[str] = None
 
