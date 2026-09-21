@@ -194,7 +194,7 @@ def get_advice(
         GROQ_URL,
         headers={"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"},
         json={
-            "model": "llama-3.1-8b-instant",
+            "model": "openai/gpt-oss-20b",
             "messages": [{"role": "user", "content": prompt}],
             "temperature": 0.5,
         },
