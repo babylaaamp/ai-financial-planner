@@ -1,7 +1,22 @@
 # AI Financial Planner
 
+![Next.js](https://img.shields.io/badge/Frontend-Next.js-black?logo=next.js)
+![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?logo=fastapi&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL(Neon)-4169E1?logo=postgresql&logoColor=white)
+![Groq](https://img.shields.io/badge/AI-Groq%20API-F55036)
+![License](https://img.shields.io/badge/License-Free%20Tier-lightgrey)
+
 เว็บแอปบันทึกรายรับ-รายจ่าย ตั้งเป้าหมายการเงิน และขอคำแนะนำจาก AI (Groq ฟรี)
 Stack: Next.js (frontend) + FastAPI (backend) + PostgreSQL (Neon) + JWT login
+
+## ฟีเจอร์
+
+- 🔐 **ระบบสมาชิก** — สมัคร/เข้าสู่ระบบด้วยอีเมลและรหัสผ่าน ยืนยันตัวตนด้วย JWT รหัสผ่านเข้ารหัสด้วย bcrypt ก่อนเก็บลงฐานข้อมูล
+- 💰 **บันทึกรายรับ-รายจ่าย** — เพิ่ม/ลบรายการ แยกหมวดหมู่เอง พร้อมสรุปยอดคงเหลือแบบเรียลไทม์
+- 🎯 **ตั้งเป้าหมายการเงิน** — ตั้งเป้า ติดตามความคืบหน้าด้วย progress bar เห็นเปอร์เซ็นต์ที่ทำได้ทันที
+- 🤖 **คำแนะนำจาก AI** — วิเคราะห์สัดส่วนรายจ่ายต่อรายรับและระยะทางไปเป้าหมาย ส่งเข้า Groq API (โมเดล Llama) แล้วรับคำแนะนำเป็นภาษาไทยที่อ่านง่าย พร้อมเก็บประวัติคำแนะนำย้อนหลัง
+- 🔒 **ข้อมูลแยกรายผู้ใช้** — ทุกตารางผูกกับ user_id ผู้ใช้แต่ละคนเห็นเฉพาะข้อมูลของตัวเอง
+- ☁️ **Deploy ได้จริง ฟรีทั้งระบบ** — Vercel (frontend) + Render (backend) + Neon (database) auto-deploy ทุกครั้งที่ push ขึ้น GitHub
 
 ## โครงสร้างโปรเจกต์
 
