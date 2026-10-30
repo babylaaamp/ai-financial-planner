@@ -1,55 +1,9 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
+import {useState} from "react";
+import {useRouter} from "next/router";
 import Link from "next/link";
-import { api } from "../lib/api";
-
-export default function Register() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setError("");
-    try {
-      await api.register(email, password);
-      setSuccess(true);
-      setTimeout(() => router.push("/login"), 1200);
-    } catch (err) {
-      setError(err.message);
-    }
-  }
-
-  return (
-    <div className="container">
-      <div className="card">
-        <h2>สมัครสมาชิก</h2>
-        {error && <p className="error">{error}</p>}
-        {success && <p style={{ color: "#16a34a" }}>สมัครสำเร็จ กำลังพาไปหน้าเข้าสู่ระบบ...</p>}
-        <form onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="อีเมล"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="รหัสผ่าน (อย่างน้อย 6 ตัว)"
-            minLength={6}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button type="submit">สมัครสมาชิก</button>
-        </form>
-        <p style={{ marginTop: 12, fontSize: 14 }}>
-          มีบัญชีอยู่แล้ว? <Link href="/login">เข้าสู่ระบบ</Link>
-        </p>
-      </div>
-    </div>
-  );
+import {api,getToken} from "../lib/api";
+export default function Register(){
+ const router=useRouter();const [email,setEmail]=useState("");const [password,setPassword]=useState("");const [error,setError]=useState("");const [busy,setBusy]=useState(false);const [success,setSuccess]=useState(false);
+ async function submit(e){e.preventDefault();setBusy(true);setError("");try{await api.register(email,password);setSuccess(true);setTimeout(()=>router.push('/login'),1000);}catch(e){setError(e.message);}finally{setBusy(false);}}
+ return <main className="auth-page"><section className="auth-visual"><Link href="/" className="brand auth-brand"><span className="brand-symbol">m</span><span>moneymind<small>PERSONAL FINANCE</small></span></Link><div className="auth-art"><div className="auth-orbit orbit-a"/><div className="auth-orbit orbit-b"/><div className="auth-coin">฿</div><span className="auth-spark spark-one">✳</span><span className="auth-spark spark-two">✦</span></div><div className="auth-quote"><span>YOUR FUTURE, IN GOOD HANDS</span><h2>Make your money<br/><em>work for you.</em></h2><p>วางแผนการเงินอย่างเข้าใจง่าย เพื่อชีวิตที่คุณเลือกเอง</p></div><div className="auth-bottom">MONEYMIND <span>·</span> SMARTER MONEY HABITS</div></section><section className="auth-form-side"><div className="auth-form-wrap"><span className="section-eyebrow">LET'S GET STARTED</span><h1>เริ่มต้นเส้นทางการเงิน</h1><p className="auth-subtitle">สร้างบัญชีเพื่อบันทึก วางแผน และเติบโตไปพร้อมกัน</p>{error&&<p className="form-error">{error}</p>}{success&&<p className="success-message">สมัครสมาชิกสำเร็จ กำลังพาไปหน้าเข้าสู่ระบบ...</p>}<form className="auth-form" onSubmit={submit}><label>อีเมล<input type="email" placeholder="you@example.com" value={email} onChange={e=>setEmail(e.target.value)} required/></label><label>รหัสผ่าน<input type="password" placeholder="อย่างน้อย 6 ตัวอักษร" minLength={6} value={password} onChange={e=>setPassword(e.target.value)} required/></label><button className="primary-button" disabled={busy||success}>{busy?"กำลังดำเนินการ...":"สร้างบัญชี"} <span>↗</span></button></form><p className="auth-switch">มีบัญชีอยู่แล้ว? <Link href="/login">เข้าสู่ระบบ</Link></p><p className="auth-legal">การใช้งานหมายถึงคุณยอมรับเงื่อนไขและนโยบายความเป็นส่วนตัว</p></div></section></main>;
 }

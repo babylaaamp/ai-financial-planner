@@ -66,3 +66,14 @@ class AdviceOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# ---------- AI Chat ----------
+class AdviceChatMessage(BaseModel):
+    role: Literal["user", "assistant"]
+    content: str
+
+
+class AdviceChatRequest(BaseModel):
+    message: str
+    history: list[AdviceChatMessage] = []

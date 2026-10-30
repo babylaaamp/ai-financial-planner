@@ -54,5 +54,6 @@ export const api = {
   deleteGoal: (id) => request(`/goals/${id}`, { method: "DELETE" }),
 
   getAdvice: () => request("/advice", { method: "POST" }),
+  chatAdvice: (message, history = []) => request("/advice/chat", { method: "POST", body: JSON.stringify({ message, history }) }),
   adviceHistory: () => request("/advice/history"),
 };

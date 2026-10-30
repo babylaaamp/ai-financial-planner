@@ -1,4 +1,5 @@
 import os
+import json
 import requests
 from datetime import date
 from typing import List
@@ -224,3 +225,73 @@ def advice_history(
         .order_by(models.AIAdviceLog.created_at.desc())
         .all()
     )
+
+
+# ---------------- AI CONVERSATION ----------------
+@app.post("/advice/chat")
+def chat_advisor(
+    payload: schemas.AdviceChatRequest,
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    if not GROQ_API_KEY:
+        raise HTTPException(status_code=500, detail="ยังไม่ได้ตั้งค่า GROQ_API_KEY บนเซิร์ฟเวอร์")
+    if not payload.message.strip():
+        raise HTTPException(status_code=422, detail="กรุณาพิมพ์คำถามก่อนส่ง")
+
+    transactions = (
+        db.query(models.Transaction)
+        .filter(models.Transaction.user_id == current_user.id)
+        .order_by(models.Transaction.date.desc())
+        .limit(500)
+        .all()
+    )
+    goals = db.query(models.Goal).filter(models.Goal.user_id == current_user.id).all()
+    income = sum(float(t.amount) for t in transactions if t.type == models.TransactionType.income)
+    expense = sum(float(t.amount) for t in transactions if t.type == models.TransactionType.expense)
+    expenses_by_category = {}
+    for tx in transactions:
+        if tx.type == models.TransactionType.expense:
+            expenses_by_category[tx.category] = expenses_by_category.get(tx.category, 0) + float(tx.amount)
+
+    data_context = {
+        "รายรับรวม": round(income, 2),
+        "รายจ่ายรวม": round(expense, 2),
+        "เงินคงเหลือ": round(income - expense, 2),
+        "รายจ่ายแยกหมวดหมู่": {k: round(v, 2) for k, v in expenses_by_category.items()},
+        "เป้าหมาย": [
+            {"ชื่อ": g.title, "เป้าหมาย": g.target_amount, "ออมแล้ว": g.current_amount,
+             "กำหนด": str(g.deadline) if g.deadline else None}
+            for g in goals
+        ],
+        "หมายเหตุ": "ยอดรวมคำนวณจากรายการทั้งหมดที่บันทึกไว้ ไม่ใช่ยอดรายเดือน"
+    }
+    messages = [{
+        "role": "system",
+        "content": (
+            "คุณคือผู้ช่วยวางแผนการเงินส่วนบุคคล ตอบภาษาไทย เป็นมิตร ชัดเจน "
+            "ใช้ Markdown แบ่งหัวข้อและ bullet list เสมอเมื่อมีหลายประเด็น "
+            "วิเคราะห์จากข้อมูลจริงที่แนบเท่านั้น ห้ามแต่งตัวเลขหรืออ้างว่าทำรายการแทนผู้ใช้แล้ว "
+            "หากข้อมูลไม่พอให้ถามเพิ่ม ระบุข้อจำกัดของข้อมูล และให้คำแนะนำที่ทำได้จริง "
+            "ไม่รับประกันผลตอบแทนการลงทุน และเตือนความเสี่ยงเมื่อพูดถึงการลงทุน "
+            f"ข้อมูลการเงินของผู้ใช้ (JSON): {json.dumps(data_context, ensure_ascii=False)}"
+        )
+    }]
+    for item in payload.history[-12:]:
+        messages.append({"role": item.role, "content": item.content[:4000]})
+    messages.append({"role": "user", "content": payload.message[:3000]})
+
+    try:
+        response = requests.post(
+            GROQ_URL,
+            headers={"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"},
+            json={"model": os.getenv("GROQ_MODEL", "openai/gpt-oss-20b"),
+                  "messages": messages, "temperature": 0.45},
+            timeout=45,
+        )
+        if response.status_code != 200:
+            raise HTTPException(status_code=502, detail="เรียก AI ไม่สำเร็จ กรุณาลองใหม่")
+        answer = response.json()["choices"][0]["message"]["content"]
+    except requests.RequestException:
+        raise HTTPException(status_code=502, detail="เชื่อมต่อ AI ไม่สำเร็จ กรุณาลองใหม่")
+    return {"reply": answer, "financial_context": data_context}
