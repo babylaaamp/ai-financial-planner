@@ -19,12 +19,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="AI Financial Planner API")
 
-FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "https://ai-financial-planner-three.vercel.app")
-
-FRONTEND_ORIGIN = os.getenv(
-    "FRONTEND_ORIGIN",
-    "http://localhost:3000"
-)
+FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "http://localhost:3000").strip().rstrip("/")
 
 app.add_middleware(
     CORSMiddleware,
