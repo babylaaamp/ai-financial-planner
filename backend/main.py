@@ -21,10 +21,15 @@ app = FastAPI(title="AI Financial Planner API")
 
 FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "https://ai-financial-planner-three.vercel.app")
 
+FRONTEND_ORIGIN = os.getenv(
+    "FRONTEND_ORIGIN",
+    "http://localhost:3000"
+)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://ai-financial-planner-three.vercel.app",
+        FRONTEND_ORIGIN,
         "http://localhost:3000",
     ],
     allow_credentials=True,
